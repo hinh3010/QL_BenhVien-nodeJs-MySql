@@ -17,11 +17,24 @@
                 border-collapse: collapse;
                 padding: 20px 0;
             }
+            button.createUser {
+                padding: 10px 20px;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+            }
+            a {
+                text-decoration: none;
+                color: deeppink;
+            }
         </style>
-        <title>Admin</title>
+        <title>Admin - Users</title>
     </head>
     <body>
         <h1>Hello Admin 💖</h1>
+        <button class="createUser">
+            <a href="users/create">Create User</a>
+        </button>
         <table class="table text-center">
             <thead>
                 <tr>
@@ -46,13 +59,13 @@
 
                     <td>
                         <a
-                            href="users/edit?id=<%= data[i].id %>"
+                            href="users/edit/id=<%= data[i].id %>"
                             class="btn btn-warning"
                             >edit</a
                         >
                         ||
                         <a
-                            href="users/delete?id=<%= data[i].id %>"
+                            href="users/delete/id=<%= data[i].id %>"
                             class="btn btn-danger"
                             >delete</a
                         >
