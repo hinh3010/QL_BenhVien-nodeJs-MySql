@@ -1,5 +1,5 @@
 ### sequelize
-`https://sequelize.org/docs/v6/getting-started/`
+https://sequelize.org/docs/v6/getting-started/
 
     npm i sequelize
     
@@ -7,7 +7,7 @@
     
     
 ### sequelize-cli
-`https://sequelize.org/docs/v6/other-topics/migrations/`
+https://sequelize.org/docs/v6/other-topics/migrations/
 
     npm i -D sequelize-cli
     
@@ -33,3 +33,22 @@
 
     If you wish to undo all seeds:
     npx sequelize-cli db:seed:undo:all
+ 
+### Datatypes
+https://sequelize.org/docs/v6/core-concepts/model-basics/#data-types
+    
+### query
+```js
+// get all obj => trả về 1 mảng obj
+await db.ModelName.findAll({raw:true})        
+  
+// get one theo key == value
+await db.ModelName.findOne({where : { key : 'value' } , raw:true}) 
+ 
+// get 1 obj với khóa chính
+await db.ModelName.findByPk(Pk,{raw:true})      
+
+await db.ModelName.create({...})
+await db.ModelName.update({...})
+```
+

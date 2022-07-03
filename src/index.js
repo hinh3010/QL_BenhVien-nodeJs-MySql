@@ -21,7 +21,7 @@ initRoutes(app)
 connectDB()
 
 app.get('/', (req, res) => {
-    res.json('adu')
+    res.json({ adu: 'adu' })
 })
 
 const PORT = process.env.PORT || 3333
