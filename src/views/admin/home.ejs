@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            table {
+                width: 100%;
+                text-align: center;
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th,
+            td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 20px 0;
+            }
+        </style>
+        <title>Admin</title>
+    </head>
+    <body>
+        <h1>Hello Admin 💖</h1>
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i=0 ; i < data.length ; i++) { %>
+                <tr>
+                    <td><%= data[i].email %></td>
+                    <td><%= data[i].firstName %></td>
+                    <td><%= data[i].lastName %></td>
+
+                    <td>
+                        <a
+                            href="/edit-crud?id=<%= data[i].id %>"
+                            class="btn btn-warning"
+                            >edit</a
+                        >
+                        <a
+                            href="/delete-crud?id=<%= data[i].id %>"
+                            class="btn btn-danger"
+                            >delete</a
+                        >
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </body>
+</html>
