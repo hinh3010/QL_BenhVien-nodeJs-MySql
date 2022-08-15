@@ -2,7 +2,7 @@ import express from 'express'
 import {
     getHomePage, getUsersPage,
     getCreateUserPage, createUser,
-    getEditUserPage, updateUser
+    getEditUserPage, updateUser, deleteUser
 } from '../controllers/admin.js'
 let router = express.Router()
 
@@ -15,6 +15,8 @@ const initRoutes = (app) => {
 
     router.get('/users/edit', getEditUserPage)
     router.post('/users/edit', updateUser)
+
+    router.get('/users/delete', deleteUser)
 
     return app.use('/admin', router)
 }

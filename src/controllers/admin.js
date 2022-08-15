@@ -1,5 +1,6 @@
 import db from '../models/index.js'
 import bcrypt from 'bcrypt'
+import services from '../services/index';
 
 const folder = 'admin/users'
 
@@ -9,14 +10,11 @@ export const getHomePage = (req, res) => {
 
 // get all
 export const getUsersPage = async (req, res) => {
-    try {
-        const users = await db.User.findAll({
-            raw: true
-        })
-        res.render(`${folder}/users.ejs`, { data: users })
-    } catch (error) {
-        console.log(error.message)
+    const { resp, err } = await services.fetchAll({ Model: db.User })
+    if (err === null && resp) {
+        return res.render(`${folder}/users.ejs`, { data: resp })
     }
+    return console.log(err)
 }
 
 // create
@@ -33,19 +31,29 @@ export const createUser = async (req, res) => {
 
         // hash password
         let hashPassword = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10))
-        await db.User.create({
-            email: data.email,
-            password: hashPassword,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            address: data.address,
-            phoneNumber: data.phoneNumber,
-            gender: data.gender === '1' ? true : false,
-            roleId: data.roleId,
-            // image: data.image,
-            // positionId: data.positionId,
+
+        const { resp, err } = await services.create({
+            Model: db.User,
+            data: {
+                email: data.email,
+                password: hashPassword,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phoneNumber: data.phoneNumber,
+                gender: data.gender === '1' ? true : false,
+                roleId: data.roleId,
+                // image: data.image,
+                // positionId: data.positionId,
+            }
         })
-        return res.redirect(`/${folder}`)
+
+        if (resp && err === null) {
+            return res.redirect(`/${folder}`)
+        }
+        else {
+            return console.log(err)
+        }
     } catch (error) {
         console.log(error.message)
     }
@@ -55,10 +63,13 @@ export const createUser = async (req, res) => {
 export const getEditUserPage = async (req, res) => {
     const userId = req.query.id
     if (userId) {
-        const data = await db.User.findOne({ where: { id: userId }, raw: true })
-        // check xem trong db có user có id = id truyền từ url hay không
-        if (data) {
-            return res.render(`${folder}/editUser.ejs`, { data })
+        const { resp, err } = await services.fetchOne({
+            Model: db.User,
+            where: { id: userId }
+        })
+
+        if (resp && err === null) {
+            return res.render(`${folder}/editUser.ejs`, { data: resp })
         } else {
             return res.json({ error: 'Not found' });
         }
@@ -71,7 +82,8 @@ export const updateUser = async (req, res) => {
     const data = req.body
     const userId = req.query.id
     if (userId) {
-        const user = await db.User.findOne({ where: { id: userId } })
+        const user = await db.User.findOne({ where: { id: userId }, raw: false })
+
         if (user) {
             user.firstName = data?.firstName
             user.lastName = data?.lastName
@@ -86,5 +98,18 @@ export const updateUser = async (req, res) => {
         }
     } else {
         return res.json({ error: 'Not found 404' })
+    }
+}
+
+// delete
+export const deleteUser = async (req, res) => {
+    const id = req.query.id
+    const { resp, err } = await services.remove({
+        Model: db.User, where: { id: id }
+    })
+    if (resp && err === null) {
+        return res.redirect(`/${folder}`)
+    } else {
+        return res.json('Thất bại')
     }
 }
