@@ -13,8 +13,8 @@ const initRoutes = (app) => {
     router.get('/users/create', getCreateUserPage)
     router.post('/users/create', createUser)
 
-    router.get('/users/edit/:id', getEditUserPage)
-    router.post('/users/edit/:id', updateUser)
+    router.get('/users/edit', getEditUserPage)
+    router.post('/users/edit', updateUser)
 
     return app.use('/admin', router)
 }

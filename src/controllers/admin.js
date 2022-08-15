@@ -13,7 +13,6 @@ export const getUsersPage = async (req, res) => {
         const users = await db.User.findAll({
             raw: true
         })
-        // console.log(users)
         res.render(`${folder}/users.ejs`, { data: users })
     } catch (error) {
         console.log(error.message)
@@ -24,11 +23,9 @@ export const getUsersPage = async (req, res) => {
 export const getCreateUserPage = async (req, res) => {
     res.render(`${folder}/createUser.ejs`)
 }
-
 export const createUser = async (req, res) => {
     if (!req.body) return console.log(error.message)
     const data = req.body
-    // return res.json({ data })
     try {
         // check email 
         const userOld = await db.User.findOne({ where: { email: data.email }, raw: true })
@@ -56,9 +53,38 @@ export const createUser = async (req, res) => {
 
 // update
 export const getEditUserPage = async (req, res) => {
-    res.render(`${folder}/editUser.ejs`)
+    const userId = req.query.id
+    if (userId) {
+        const data = await db.User.findOne({ where: { id: userId }, raw: true })
+        // check xem trong db có user có id = id truyền từ url hay không
+        if (data) {
+            return res.render(`${folder}/editUser.ejs`, { data })
+        } else {
+            return res.json({ error: 'Not found' });
+        }
+    } else {
+        return res.json({ error: 'Not found 404' })
+    }
 }
-
 export const updateUser = async (req, res) => {
-    res.json({ post: 'post' })
+    if (!req.body) return console.log(error.message)
+    const data = req.body
+    const userId = req.query.id
+    if (userId) {
+        const user = await db.User.findOne({ where: { id: userId } })
+        if (user) {
+            user.firstName = data?.firstName
+            user.lastName = data?.lastName
+            user.address = data?.address
+            user.phoneNumber = data?.phoneNumber
+
+            await user.save()
+
+            return res.redirect(`/${folder}`)
+        } else {
+            return res.json({ error: 'User Not found' });
+        }
+    } else {
+        return res.json({ error: 'Not found 404' })
+    }
 }
